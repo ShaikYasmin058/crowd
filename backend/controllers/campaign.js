@@ -41,16 +41,16 @@ const item4 = new db.Campaign({
 const defaultItems = [item1, item2, item3, item4];
 
 // Only run this during development to insert default items
-db.Campaign.find().exec((err, results) => {
+db.Campaign.find().then((results) => {
   if (results.length === 0) {
-    db.Campaign.insertMany(defaultItems, (err) => {
-      if (err) {
-        console.error("Error inserting default items:", err);
-      } else {
-        console.log("Successfully added default items to Campaign collection in DB");
-      }
+    db.Campaign.insertMany(defaultItems).then(() => {
+      console.log("Successfully added default items to Campaign collection in DB");
+    }).catch((err) => {
+      console.error("Error inserting default items:", err);
     });
   }
+}).catch((err) => {
+  console.error("Error finding campaigns:", err);
 });
 
 // Hide transaction ID function

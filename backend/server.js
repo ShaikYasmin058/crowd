@@ -14,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // ✅ Clean MongoDB Connection (no deprecated options)
-mongoose.connect("mongodb://127.0.0.1:27017/crowdfundingDB")
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/crowdfundingDB")
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -22,10 +22,12 @@ mongoose.connect("mongodb://127.0.0.1:27017/crowdfundingDB")
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const donationRoutes = require("./routes/donationRoutes");
+const paymentRoutes = require("./routes/payment");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/donations", donationRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // Root Route
 app.get("/", (req, res) => {

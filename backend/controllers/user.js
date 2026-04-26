@@ -7,31 +7,32 @@ const { User } = require("../models");
 require("dotenv").config();
 
 // Default admin for development stage
-db.User.find().exec(function (err, results) {
+db.User.find().then((results) => {
   var count = results.length;
 
   if (count == 0) {
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err)
-        return res
-          .status(400)
-          .json({ message: "Something went wrong, try again" });
-      bcrypt.hash("abc", salt, (err, hash) => {
-        if (err)
-          return res
-            .status(400)
-            .json({ message: "Something went wrong, try again" });
-
+    bcrypt.genSalt(10).then((salt) => {
+      bcrypt.hash("abc", salt).then((hash) => {
         const user = new db.User({
           email: "imt_2018109@iiitm.ac.in",
           password: hash,
           isVerified: true,
         });
 
-        user.save();
+        user.save().then(() => {
+          console.log("Default admin user created");
+        }).catch((err) => {
+          console.error("Error creating default admin:", err);
+        });
+      }).catch((err) => {
+        console.error("Error hashing password:", err);
       });
+    }).catch((err) => {
+      console.error("Error generating salt:", err);
     });
   }
+}).catch((err) => {
+  console.error("Error finding users:", err);
 });
 
 //-------------------------------------------------------------------------------------------------------

@@ -31,22 +31,14 @@
 
 
 
-
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-// ✅ Define the donation schema
 const donationSchema = new mongoose.Schema({
-    donorName: { type: String, required: true },  // Donor's Name
-    amount: { type: Number, required: true },    // Donation Amount
-    message: { type: String },                   // Optional Message
-    date: { type: Date, default: Date.now },     // Donation Date
-    transactionComplete: { type: Boolean, default: false }, // Transaction Status
-    transactionID: { type: String, default: "" }, // Unique Transaction ID
-    campaign: { type: Schema.Types.ObjectId, ref: "Campaign" } // Linked Campaign
+  name: { type: String, required: true },
+  amount: { type: Number, required: true },
+  paymentMethod: { type: String, required: true },
+  campaignId: { type: String, required: false }, // Optional
+  date: { type: Date, default: Date.now }
 });
 
-// ✅ Create the model
-const Donation = mongoose.model("Donation", donationSchema);
-
-module.exports = Donation;
+module.exports = mongoose.model("Donation", donationSchema);

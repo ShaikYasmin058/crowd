@@ -9,6 +9,7 @@ const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
 const config = require("../config");
 require("dotenv").config();
+const QRCode = require("qrcode");
 
 const app = express();
 const router = express.Router();
@@ -90,5 +91,62 @@ router.post("/:id/payment", [parseUrl, parseJson], (req, res) => {
 });
 
 router.post("/success", ctrl.payment.success);
+
+router.post("/initiate-payment", async (req, res) => {
+  const { name, amount, paymentMethod, campaignTitle } = req.body;
+
+  if (!amount || !paymentMethod) {
+    return res.status(400).json({ success: false, message: "Missing required fields" });
+  }
+
+  try {
+    // Create donation record
+    const donation = new Donation({
+      name,
+      amount,
+      paymentMethod,
+      transactionComplete: true, // For UPI, assume complete
+    });
+
+    await donation.save();
+
+    let upiUrl = "";
+    const upiId = "shaikyasmin78@ybl"; // User's PhonePe UPI ID
+    const payeeName = campaignTitle || "Campaign Donation";
+    const note = `Donation for ${payeeName}`;
+
+    if (paymentMethod === "PhonePe") {
+      // Generate UPI link for PhonePe - try multiple protocols
+      upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+    } else if (paymentMethod === "Google Pay") {
+      // Use tez:// for Google Pay
+      upiUrl = `tez://upi/pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`;
+    } else {
+      return res.status(400).json({ success: false, message: "Unsupported payment method" });
+    }
+
+    // Generate QR code as data URL
+    const qrCodeDataURL = await QRCode.toDataURL(upiUrl);
+
+    // Create additional fallback URLs
+    const intentUrl = `intent://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}#Intent;scheme=upi;package=com.phonepe.app;end`;
+
+    res.json({
+      success: true,
+      redirectUrl: upiUrl,
+      qrCode: qrCodeDataURL,
+      donationId: donation._id,
+      upiId: upiId,
+      amount: amount,
+      paymentMethod: paymentMethod,
+      webFallbackUrl: `https://pay.google.com/gp/p/ui/pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`,
+      intentUrl: intentUrl,
+      manualUrl: `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(note)}`
+    });
+  } catch (error) {
+    console.error("Payment initiation error:", error);
+    res.status(500).json({ success: false, message: "Failed to initiate payment" });
+  }
+});
 
 module.exports = router;

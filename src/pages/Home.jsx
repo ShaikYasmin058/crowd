@@ -1318,6 +1318,277 @@
 
 
 
+// import './Home.css';
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
+// import Button from "../components/Button";
+// import logo from "../assets/logo.jpeg";
+
+// const backgroundImages = [
+//   "/images/bg1.jpeg",
+//   "/images/bg2.jpeg",
+//   "/images/bg3.jpeg",
+//   "/images/bg4.jpeg",
+//   "/images/bg5.jpeg"
+// ];
+
+// const services = [
+//   // { title: "Education", icon: "/images.jpeg" },
+// //  { title: "Education", icon: "/img3.peg" },
+//  { title: "Education", icon: "/img5.jpeg" },
+
+
+//   { title: "Good Food", icon: "/img2.png" },
+//    { title: "Healthy Food", icon: "/img6.png" },
+//     { title: "Environment", icon: "/img7.jpeg" },
+//     { title: "Pure Water", icon: "/img9.jpeg" },
+  
+//   { title: "No Poverty", icon: "/img10.png" }
+// ];
+
+// const initiatives = [
+//   {
+//     img: "/images/bg3.jpeg",
+
+//     title: "Education",
+//     desc: "Help kids get access to quality education.",
+//     donateLink: "/donate?type=education"
+//   },
+//   {
+//     img: "/images/bg4.jpeg",
+//     title: "Healthy Food",
+//     desc: "Provide clean and healthy food to the poor.",
+//     donateLink: "/donate?type=food"
+//   },
+//   {
+//     img: "/images/bg10.jpeg",
+//     title: "Good Health",
+//     desc: "Support health checkups and treatment.",
+//     donateLink: "/donate?type=health"
+//   },
+//   {
+//     img: "/images/bg5.jpeg",
+//     title: "Environment",
+//     desc: "Protect and preserve the natural world.",
+//     donateLink: "/donate?type=environment"
+//   },
+//   {
+//     img: "/images/pure-water.jpg",
+//     title: "Pure Water",
+//     desc: "Bring clean water to rural communities.",
+//     donateLink: "/donate?type=water"
+//   },
+//   {
+//     img: "/images/poverty-initiative.jpg",
+//     title: "No Poverty",
+//     desc: "Help families come out of extreme poverty.",
+//     donateLink: "/donate?type=poverty"
+//   }
+// ];
+
+
+// const Home = () => {
+//   const navigate = useNavigate();
+//   const [backendMessage, setBackendMessage] = useState("");
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+//   const [donationAmount, setDonationAmount] = useState("");
+
+//   useEffect(() => {
+//     axios
+//       .get("http://localhost:5001/")
+//       .then((res) => setBackendMessage(res.data))
+//       .catch(() => setBackendMessage("⚠️ Backend not responding"));
+//   }, []);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+//     }, 4000);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   useEffect(() => {
+//     const carousel = document.getElementById("carousel");
+//     let scrollAmount = 0;
+
+//     const scrollInterval = setInterval(() => {
+//       if (carousel) {
+//         scrollAmount += 1;
+//         carousel.scrollLeft += 1;
+
+//         if (scrollAmount >= carousel.scrollWidth - carousel.clientWidth) {
+//           carousel.scrollLeft = 0;
+//           scrollAmount = 0;
+//         }
+//       }
+//     }, 20);
+
+//     return () => clearInterval(scrollInterval);
+//   }, []);
+
+//   const handlePresetClick = (amount) => {
+//     setDonationAmount(amount);
+//   };
+
+//   return (
+//     <div className="app-container">
+//       <div className="slideshow-background">
+//         {backgroundImages.map((src, index) => (
+//           <img
+//             key={index}
+//             src={src}
+//             alt={`bg-${index}`}
+//             className={`bg-image ${index === currentImageIndex ? 'active' : ''}`}
+//           />
+//         ))}
+//       </div>
+
+//       <nav className="navbar">
+//         <div className="logo-container">
+//           <img src={logo} alt="Logo" className="logo-image" />
+//           <h2 className="logo-text">Crowdfunding</h2>
+//         </div>
+//         <div className="nav-links">
+//           <Button onClick={() => navigate("/about")}>About Us</Button>
+//           <Button onClick={() => navigate("/contact")}>Contact Us</Button>
+//           <Button onClick={() => navigate("/signin")}>Sign In</Button>
+//           <Button onClick={() => navigate("/signup")}>Sign Up</Button>
+//           <Button className="donate-button" onClick={() => navigate("/donate")}>Donate</Button>
+
+          
+//         </div>
+//       </nav>
+
+//       <section className="hero">
+//         <h1 className="hero-title">Support Our Cause</h1>
+//         <p className="hero-text">Your donation helps us make a difference in the community.</p>
+//         <p className="backend-status">🔗 Backend says: {backendMessage}</p>
+//         <div className="hero-buttons">
+//           <Button onClick={() => navigate("/campaign")}>🎯 View Campaigns</Button>
+//           <Button onClick={() => navigate("/add-campaign")}>🚀 Create Campaign</Button>
+//         </div>
+//       </section>
+
+//       <section className="services-section">
+//         <div className="services-grid">
+//           {services.map((service, index) => (
+//             <div key={index} className="service-card">
+//               <img src={service.icon} alt={service.title} className="service-icon" />
+//               <h3>{service.title}</h3>
+//             </div>
+//           ))}
+//         </div>
+//       </section>
+
+//       <section className="initiatives-section">
+//         <h2 className="initiatives-heading">❤️ Help The People</h2>
+//         <div className="initiatives-carousel" id="carousel">
+//           {initiatives.map((item, index) => (
+//             <div key={index} className="initiative-card">
+//               <img src={item.img} alt={item.title} />
+//               <h3>{item.title}</h3>
+//               <p>{item.desc}</p>
+//               <Button onClick={() => navigate(item.donateLink)}>💖 Donate Now</Button>
+//             </div>
+//           ))}
+//         </div>
+//       </section>
+
+//       <section className="donation-wrapper">
+//         <div className="donation-left-box">
+//           <h2>Support Our Mission</h2>
+//           <p>
+//             Your generous donation helps us provide essential resources, support, and opportunities to those in need.
+//             Together, we can create lasting positive change in our community. A life not lived with others is not a life.
+//             Do not wait for leaders; do it alone person to person.
+//           </p>
+
+//           <button className="fundraiser-btn">
+//             Start Your Fundraise Heartfeltly Help Ever Hurt Never
+//           </button>
+
+//           <div className="preset-amounts">
+//             {[100, 500, 1000, 2000, 5000].map((amt, i) => (
+//               <button
+//                 key={amt}
+//                 className={`preset-btn preset-${i}`}
+//                 onClick={() => handlePresetClick(amt)}
+//               >
+//                 ₹{amt}
+//               </button>
+//             ))}
+//           </div>
+
+//           <input
+//             type="number"
+//             className="donation-input"
+//             placeholder="Enter Donation Amount"
+//             value={donationAmount}
+//             onChange={(e) => setDonationAmount(e.target.value)}
+//           />
+
+//           <Button
+//   className="donate-button"
+//   onClick={() =>
+//     navigate("/donate", {
+//       state: {
+//         title: "General Donation",
+//         description: "Support our mission with a contribution of your choice.",
+//         image:
+//           "https://images.pexels.com/photos/6646900/pexels-photo-6646900.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+//         amount: ""
+//       }
+//     })
+//   }
+// >
+//   Donate
+// </Button>
+
+
+//         </div>
+
+//         <div className="donation-right-box">
+//           <div className="video-box">
+//             <iframe
+//               width="100%"
+//               height="250"
+//               src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+//               title="Myna Seva Foundation Video"
+//               frameBorder="0"
+//               allowFullScreen
+//             ></iframe>
+//           </div>
+
+//           <div className="mission-vision-box">
+//             <h2>Myna Seva Foundation Mission</h2>
+//             <p>The Myna Seva Foundation envisions a world where every individual has access to the resources and opportunities needed to lead a life of dignity, purpose, and fulfillment.</p>
+
+//             <h2>Myna Seva Foundation Vision</h2>
+//             <p>We strive to uplift marginalized communities by providing education, health, and sustainable support, fostering independence and a brighter future for all.</p>
+//           </div>
+          
+//         </div>
+
+//       </section>
+//     </div>
+//   );
+// };
+
+// export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
+
 import './Home.css';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -1334,23 +1605,17 @@ const backgroundImages = [
 ];
 
 const services = [
-  // { title: "Education", icon: "/images.jpeg" },
-//  { title: "Education", icon: "/img3.peg" },
- { title: "Education", icon: "/img5.jpeg" },
-
-
+  { title: "Education", icon: "/img5.jpeg" },
   { title: "Good Food", icon: "/img2.png" },
-   { title: "Healthy Food", icon: "/img6.png" },
-    { title: "Environment", icon: "/img7.jpeg" },
-    { title: "Pure Water", icon: "/img9.jpeg" },
-  
+  { title: "Healthy Food", icon: "/img6.png" },
+  { title: "Environment", icon: "/img7.jpeg" },
+  { title: "Pure Water", icon: "/img9.jpeg" },
   { title: "No Poverty", icon: "/img10.png" }
 ];
 
 const initiatives = [
   {
     img: "/images/bg3.jpeg",
-
     title: "Education",
     desc: "Help kids get access to quality education.",
     donateLink: "/donate?type=education"
@@ -1386,7 +1651,6 @@ const initiatives = [
     donateLink: "/donate?type=poverty"
   }
 ];
-
 
 const Home = () => {
   const navigate = useNavigate();
@@ -1450,13 +1714,14 @@ const Home = () => {
           <h2 className="logo-text">Crowdfunding</h2>
         </div>
         <div className="nav-links">
+          <Button onClick={() => navigate("/search")}>🔍 Search</Button>
+          <Button onClick={() => navigate("/campaign")}>🎯 Campaigns</Button>
+          <Button onClick={() => navigate("/dashboard")}>📊 Dashboard</Button>
           <Button onClick={() => navigate("/about")}>About Us</Button>
           <Button onClick={() => navigate("/contact")}>Contact Us</Button>
           <Button onClick={() => navigate("/signin")}>Sign In</Button>
           <Button onClick={() => navigate("/signup")}>Sign Up</Button>
           <Button className="donate-button" onClick={() => navigate("/donate")}>Donate</Button>
-
-          
         </div>
       </nav>
 
@@ -1470,10 +1735,19 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ✅ Updated services section with Education card navigation */}
       <section className="services-section">
         <div className="services-grid">
           {services.map((service, index) => (
-            <div key={index} className="service-card">
+            <div
+              key={index}
+              className="service-card"
+              onClick={() => {
+                if (service.title === "Education") {
+                  navigate("/education");
+                }
+              }}
+            >
               <img src={service.icon} alt={service.title} className="service-icon" />
               <h3>{service.title}</h3>
             </div>
@@ -1529,23 +1803,21 @@ const Home = () => {
           />
 
           <Button
-  className="donate-button"
-  onClick={() =>
-    navigate("/donate", {
-      state: {
-        title: "General Donation",
-        description: "Support our mission with a contribution of your choice.",
-        image:
-          "https://images.pexels.com/photos/6646900/pexels-photo-6646900.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        amount: ""
-      }
-    })
-  }
->
-  Donate
-</Button>
-
-
+            className="donate-button"
+            onClick={() =>
+              navigate("/donate", {
+                state: {
+                  title: "General Donation",
+                  description: "Support our mission with a contribution of your choice.",
+                  image:
+                    "https://images.pexels.com/photos/6646900/pexels-photo-6646900.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+                  amount: ""
+                }
+              })
+            }
+          >
+            Donate
+          </Button>
         </div>
 
         <div className="donation-right-box">
