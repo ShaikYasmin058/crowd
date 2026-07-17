@@ -224,8 +224,6 @@ Vemu Institute of Technology
 
 ## License
 
-## License
-
 Copyright © 2026 Shaik Yasmin. All rights reserved.
 
 This project is intended for demonstration and educational purposes only. No part of this project may be copied, modified, or distributed without prior permission from the author.
